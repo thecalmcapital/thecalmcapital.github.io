@@ -299,35 +299,67 @@
     }
   },
   {
-    id: 'terms',
-    title: 'Terms of Service & Disclaimer',
-    subtitle: 'Legal Framework and Usage Guidelines',
-    icon: 'Gavel',
-    readTime: "8 min read",
+    id: 'disclaimer',
+    title: 'Legal Disclaimer',
+    subtitle: 'Important Regulatory & Risk Disclosures',
+    icon: 'ShieldAlert',
+    readTime: "5 min read",
     content: {
-      openingContext: "Access to The Calm Capital is subject to the following terms. By using this platform, you acknowledge that you have read, understood, and agreed to these conditions. This platform is an educational initiative and does not provide financial services.",
+      openingContext: "The Calm Capital is strictly an educational initiative. Before using this platform, you must understand the limitations of the information provided and the regulatory framework within which we operate.",
       chapters: [
         {
-          heading: "1. Educational Purpose Only",
-          body: `The content provided on The Calm Capital ("The Platform") is strictly for educational and informational purposes. It is designed to explain financial concepts, historical market behavior, and structural risks. It does not constitute, and should not be interpreted as, financial, investment, tax, or legal advice. No content on this site should be viewed as a recommendation to buy or sell any specific security, mutual fund, or insurance product.`
+          heading: "1. No Investment Advice",
+          body: `The content on this website is for informational and educational purposes only. It does not constitute investment, financial, legal, or tax advice. No content on this site should be construed as a recommendation to buy, sell, or hold any security, financial product, or instrument.`
         },
         {
-          heading: "2. No Fiduciary Relationship",
-          body: `Using this website does not establish a client-advisor or fiduciary relationship between the user and The Calm Capital. We are not a SEBI Registered Investment Advisor (RIA). The information presented may not be suitable for your specific financial situation, risk tolerance, or investment horizon.`
+          heading: "2. Not a SEBI Registered Advisor",
+          body: `The authors and maintainers of The Calm Capital are **not** SEBI Registered Investment Advisors (RIA), Research Analysts, or Portfolio Managers. We do not provide personalized financial planning or portfolio reviews. Any financial decision you make should be done in consultation with a qualified, registered professional who understands your specific financial situation.`
         },
         {
-          heading: "3. Assumption of Risk",
-          body: `Investing in financial markets involves inherent risks, including the potential loss of principal. Past performance of asset classes or indices is not indicative of future results. The user assumes full responsibility for any financial decisions made. The Platform is not liable for any losses incurred based on the information provided here.`
+          heading: "3. No Warranties",
+          body: `All information is provided "as is" without warranty of any kind. We do not guarantee the accuracy, completeness, or timeliness of the data presented. Historical returns cited (e.g., Nifty 50 performance) are for illustrative purposes only and do not guarantee future performance.`
         },
         {
-          heading: "4. Accuracy of Information",
-          body: `While every effort is made to ensure the accuracy of the information presented, The Platform makes no warranties, expressed or implied, regarding the completeness, accuracy, or timeliness of the content. Regulatory frameworks (SEBI, RBI) and tax laws are subject to change.`
+            heading: "4. Investment Risks",
+            body: `Investing in financial markets (Equity, Debt, Gold, Derivatives) involves a high degree of risk, including the potential for loss of principal. Markets are volatile and subject to global macroeconomic events, government policy changes, and systemic risks. You are solely responsible for your investment decisions.`
         }
       ],
-      behavioralDimension: "Reading terms helps align expectations regarding the nature of financial information vs. advice.",
-      limitations: ["Jurisdiction: India.", "Laws subject to change."],
-      riskStatement: "Consult a qualified professional before making financial decisions.",
+      behavioralDimension: "Acknowledging the limits of one's own knowledge is the first step in risk management.",
+      limitations: ["Jurisdiction: Laws of India apply.", "No dispute resolution mechanism provided as no service is sold."],
+      riskStatement: "You assume full responsibility for any financial losses incurred.",
       source: "Legal Counsel."
+    }
+  },
+  {
+    id: 'terms',
+    title: 'Terms of Service',
+    subtitle: 'Usage Guidelines & Intellectual Property',
+    icon: 'Gavel',
+    readTime: "6 min read",
+    content: {
+      openingContext: "By accessing The Calm Capital, you agree to be bound by these Terms of Service. If you do not agree, please discontinue use of the platform immediately.",
+      chapters: [
+        {
+          heading: "1. Intellectual Property",
+          body: `All content, design, diagrams, and code on The Calm Capital are the intellectual property of The Calm Capital Project, unless otherwise noted. You may read, print, and download content for personal, non-commercial use only. You may not reproduce, distribute, or create derivative works without explicit written permission.`
+        },
+        {
+          heading: "2. Permitted Use",
+          body: `You agree to use this platform only for lawful purposes. You shall not use this website in any way that causes, or may cause, damage to the website or impairment of the availability or accessibility of the website.`
+        },
+        {
+          heading: "3. Limitation of Liability",
+          body: `In no event shall The Calm Capital or its contributors be liable for any direct, indirect, incidental, special, or consequential damages arising out of or in any way connected with the use of this website or with the delay or inability to use this website.`
+        },
+        {
+            heading: "4. Governing Law",
+            body: `These terms and conditions are governed by and construed in accordance with the laws of India. Any disputes relating to these terms and conditions will be subject to the exclusive jurisdiction of the courts of India.`
+        }
+      ],
+      behavioralDimension: "Rules create the structure necessary for a stable environment.",
+      limitations: ["Unilateral right to modify terms.", "Access may be terminated at any time."],
+      riskStatement: "Violation of terms may result in restricted access.",
+      source: "Standard Digital Terms."
     }
   },
   {
@@ -337,7 +369,7 @@
     icon: 'Lock',
     readTime: "5 min read",
     content: {
-      openingContext: "We believe in the principle of Data Minimization. We do not collect what we do not need.",
+      openingContext: "We believe in the principle of Data Minimization. We do not collect what we do not need. Your privacy is a fundamental right.",
       chapters: [
         {
           heading: "1. No Personal Data Collection",
@@ -349,11 +381,11 @@
         },
         {
           heading: "3. Third-Party Infrastructure",
-          body: `To deliver this content efficiently, we utilize standard third-party content delivery networks (CDNs) including GitHub Pages (hosting) and ESM.sh (libraries). When your browser loads these resources, your IP address is visible to these infrastructure providers as part of standard internet communication protocols.`
+          body: `To deliver this content efficiently, we utilize standard third-party content delivery networks (CDNs) including GitHub Pages (hosting) and ESM.sh (libraries). When your browser loads these resources, your IP address is visible to these infrastructure providers as part of standard internet communication protocols. We do not use Google Analytics or other invasive trackers.`
         }
       ],
       behavioralDimension: "Privacy is a right, not a feature.",
-      limitations: ["External links are not covered."],
+      limitations: ["External links are not covered by this policy."],
       riskStatement: "We are not responsible for the privacy practices of linked external sites.",
       source: "The Calm Capital Project."
     }
@@ -761,8 +793,9 @@
                     <div className="w-12 h-px bg-codex-gold mx-auto mb-8"></div>
                     <p className="font-serif italic text-codex-dim text-lg mb-8">"The preservation of capital requires the understanding of risk, not just the pursuit of return."</p>
                     <div className="flex justify-center gap-6 text-xs font-sans uppercase tracking-widest text-codex-dim">
-                        <button onClick={() => handleModuleSelect('terms')} className="hover:text-codex-gold transition-colors">Terms & Disclaimer</button>
-                        <button onClick={() => handleModuleSelect('privacy')} className="hover:text-codex-gold transition-colors">Privacy</button>
+                        <button onClick={() => handleModuleSelect('disclaimer')} className="hover:text-codex-gold transition-colors">Disclaimer</button>
+                        <button onClick={() => handleModuleSelect('terms')} className="hover:text-codex-gold transition-colors">Terms of Service</button>
+                        <button onClick={() => handleModuleSelect('privacy')} className="hover:text-codex-gold transition-colors">Privacy Policy</button>
                     </div>
                   </footer>
                 </div>
