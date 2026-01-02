@@ -58,4 +58,922 @@
       }
     </script>
     <style>
-      body {
+      body { background-color: #0a0a0a; color: #E5E5E5; }
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #0a0a0a; }
+      ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }
+      .overlay-backdrop { background-color: rgba(10, 10, 10, 0.95); }
+    </style>
+
+    <!-- Import Map for Libraries -->
+    <!-- CRITICAL: ?deps=react@18.2.0 ensures all libs share the exact same React instance -->
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client?deps=react@18.2.0",
+        "lucide-react": "https://esm.sh/lucide-react@0.263.1?deps=react@18.2.0",
+        "framer-motion": "https://esm.sh/framer-motion@10.16.4?deps=react@18.2.0"
+      }
+    }
+    </script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- MAIN APPLICATION SCRIPT -->
+    <script type="text/babel" data-type="module">
+        import React, { useState, useEffect, useRef } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { motion } from 'framer-motion';
+        import { 
+          BookOpen, ShieldAlert, Scale, Landmark, ChevronRight, Menu, X, 
+          Printer, Search, Book, User, Feather, FileText, Lock, Layers, Compass 
+        } from 'lucide-react';
+
+        // --- DIAGRAM COMPONENTS ---
+
+        const InflationDiagram = () => {
+          const years = [0, 5, 10, 15, 20];
+          const inflationRate = 0.06; 
+          const data = years.map(y => ({
+            year: y,
+            value: 100 / Math.pow(1 + inflationRate, y)
+          }));
+
+          return (
+            <div className="w-full p-8 bg-codex-card border-none rounded-sm">
+              <div className="flex items-end justify-between h-64 px-4 relative">
+                <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-10">
+                     <div className="w-full h-px bg-white border-t border-dashed"></div>
+                     <div className="w-full h-px bg-white border-t border-dashed"></div>
+                     <div className="w-full h-px bg-white border-t border-dashed"></div>
+                </div>
+                {data.map((point, i) => (
+                  <div key={i} className="flex flex-col items-center gap-4 z-10 w-1/5">
+                     <div className="relative w-full flex justify-center items-end h-full">
+                        <motion.div 
+                          initial={{ height: 0 }}
+                          whileInView={{ height: `${point.value}%` }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 1, delay: i * 0.1 }}
+                          className="w-16 bg-gradient-to-t from-codex-border to-codex-dim border-t-2 border-codex-gold relative group"
+                        >
+                           <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-codex-gold font-mono text-xs">
+                             {Math.round(point.value)}%
+                           </div>
+                        </motion.div>
+                        <div className="absolute bottom-[calc(100%+8px)] font-mono text-xs text-codex-dim opacity-70">
+                            {Math.round(point.value)}%
+                        </div>
+                     </div>
+                     <span className="font-sans text-[10px] text-codex-dim uppercase tracking-wider">Year {point.year}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        };
+
+        const CompoundingDiagram = () => {
+          return (
+            <div className="w-full p-12 bg-codex-card border-none rounded-sm flex flex-col md:flex-row gap-12 items-center justify-center">
+                <div className="flex flex-col items-center">
+                    <div className="w-40 h-40 relative flex items-center justify-center">
+                         <div className="absolute w-20 h-20 rounded-full border border-codex-dim opacity-30"></div>
+                         <div className="absolute w-28 h-28 rounded-full border border-codex-dim opacity-20"></div>
+                         <div className="absolute w-36 h-36 rounded-full border border-codex-dim opacity-10"></div>
+                         <span className="relative z-10 font-sans text-xs font-bold text-codex-dim tracking-widest uppercase">Linear</span>
+                    </div>
+                    <p className="text-[10px] text-codex-dim mt-4 text-center max-w-[150px] uppercase tracking-wider opacity-60">Simple Interest</p>
+                </div>
+                <div className="h-px w-24 bg-codex-border md:hidden"></div>
+                <div className="w-px h-24 bg-codex-border hidden md:block"></div>
+                <div className="flex flex-col items-center">
+                    <div className="w-40 h-40 relative flex items-center justify-center">
+                         <motion.div 
+                            animate={{ scale: [1, 1.2, 1.5, 1.8] }}
+                            transition={{ duration: 4, repeat: Infinity, ease: "easeIn" }}
+                            className="absolute w-12 h-12 rounded-full bg-codex-gold/20 border border-codex-gold"
+                         ></motion.div>
+                         <span className="relative z-10 font-sans text-xs font-bold text-codex-gold bg-codex-card px-2 tracking-widest uppercase">Exponential</span>
+                    </div>
+                     <p className="text-[10px] text-codex-dim mt-4 text-center max-w-[150px] uppercase tracking-wider opacity-60">Compound Interest</p>
+                </div>
+            </div>
+          );
+        };
+
+        const RiskReturnDiagram = () => {
+          const levels = [
+            { label: "Equities", risk: "High", desc: "Growth Potential / High Volatility" },
+            { label: "Corporate Debt", risk: "Medium", desc: "Yield / Credit Risk" },
+            { label: "Government Bonds", risk: "Low", desc: "Safety / Inflation Risk" },
+            { label: "Cash / Equivalents", risk: "Lowest", desc: "Liquidity / Purchasing Power Loss" },
+          ];
+          return (
+            <div className="py-8 bg-codex-card">
+                <div className="flex flex-col items-center gap-2">
+                    {levels.map((lvl, i) => (
+                        <div 
+                            key={i}
+                            className="flex items-center justify-between px-6 py-4 border border-codex-border bg-codex-black w-full max-w-2xl transition-all hover:border-codex-gold/50"
+                            style={{ width: `${100 - (i * 10)}%` }}
+                        >
+                            <span className="font-serif text-codex-text text-lg">{lvl.label}</span>
+                            <div className="text-right">
+                                <span className="block text-[10px] uppercase font-bold text-codex-gold tracking-wider">{lvl.risk} Volatility</span>
+                                <span className="block text-[10px] text-codex-dim italic">{lvl.desc}</span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+          );
+        };
+
+        const AssetClassTable = () => {
+            return (
+                <div className="overflow-x-auto border border-codex-border rounded-sm">
+                    <table className="w-full text-left text-sm font-sans">
+                        <thead className="bg-codex-black text-codex-dim text-[10px] uppercase tracking-wider font-bold border-b border-codex-border">
+                            <tr>
+                                <th className="px-6 py-4">Asset Class</th>
+                                <th className="px-6 py-4">Primary Role</th>
+                                <th className="px-6 py-4">Primary Risk</th>
+                                <th className="px-6 py-4">Ideal Horizon</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-codex-border bg-codex-card text-codex-text">
+                            <tr>
+                                <td className="px-6 py-5 font-bold text-codex-gold">Equity</td>
+                                <td className="px-6 py-5">Wealth Generation</td>
+                                <td className="px-6 py-5 text-codex-dim">Market Volatility</td>
+                                <td className="px-6 py-5 text-codex-dim">Long (&gt;7 Years)</td>
+                            </tr>
+                            <tr>
+                                <td className="px-6 py-5 font-bold text-codex-gold">Fixed Income</td>
+                                <td className="px-6 py-5">Income & Stability</td>
+                                <td className="px-6 py-5 text-codex-dim">Inflation & Rate Changes</td>
+                                <td className="px-6 py-5 text-codex-dim">Medium (3-7 Years)</td>
+                            </tr>
+                            <tr>
+                                <td className="px-6 py-5 font-bold text-codex-gold">Gold</td>
+                                <td className="px-6 py-5">Crisis Hedge</td>
+                                <td className="px-6 py-5 text-codex-dim">No Yield / Price Stagnation</td>
+                                <td className="px-6 py-5 text-codex-dim">Very Long / Strategic</td>
+                            </tr>
+                             <tr>
+                                <td className="px-6 py-5 font-bold text-codex-gold">Liquid Cash</td>
+                                <td className="px-6 py-5">Emergency & Operations</td>
+                                <td className="px-6 py-5 text-codex-dim">Inflation Erosion</td>
+                                <td className="px-6 py-5 text-codex-dim">Short (&lt;1 Year)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            );
+        };
+
+        const PortfolioAllocationDiagram = () => {
+            return (
+                <div className="w-full p-12 bg-codex-card border-none rounded-sm flex flex-col items-center justify-center">
+                    <div className="relative w-64 h-64">
+                        <motion.div 
+                            initial={{ scale: 0, opacity: 0 }}
+                            whileInView={{ scale: 1, opacity: 1 }}
+                            transition={{ duration: 0.8 }}
+                            className="absolute inset-0 border-2 border-codex-gold rounded-full flex items-center justify-center"
+                        >
+                            <span className="font-sans text-xs font-bold text-codex-gold uppercase tracking-widest bg-codex-card px-2 z-10">Equity (Core)</span>
+                        </motion.div>
+                        <motion.div 
+                            initial={{ scale: 0, opacity: 0 }}
+                            whileInView={{ scale: 0.75, opacity: 1 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                            className="absolute inset-0 m-auto w-[75%] h-[75%] border border-dashed border-codex-dim rounded-full flex items-start justify-center"
+                        >
+                            <span className="font-sans text-[10px] text-codex-dim uppercase tracking-wider bg-codex-card px-2 -mt-2">Debt</span>
+                        </motion.div>
+                        <motion.div 
+                             initial={{ scale: 0, opacity: 0 }}
+                             whileInView={{ scale: 0.5, opacity: 1 }}
+                             transition={{ duration: 0.8, delay: 0.4 }}
+                             className="absolute inset-0 m-auto w-[50%] h-[50%] border border-dotted border-codex-dim rounded-full flex items-end justify-center"
+                        >
+                            <span className="font-sans text-[10px] text-codex-dim uppercase tracking-wider bg-codex-card px-2 -mb-2">Gold</span>
+                        </motion.div>
+                        <motion.div 
+                             initial={{ scale: 0, opacity: 0 }}
+                             whileInView={{ scale: 0.25, opacity: 1 }}
+                             transition={{ duration: 0.8, delay: 0.6 }}
+                             className="absolute inset-0 m-auto w-[25%] h-[25%] bg-codex-border rounded-full flex items-center justify-center"
+                        >
+                        </motion.div>
+                    </div>
+                    <div className="flex gap-8 mt-8 text-[10px] uppercase tracking-wider text-codex-dim">
+                        <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 border border-codex-gold rounded-full"></div> Growth
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 border border-dashed border-codex-dim rounded-full"></div> Stability
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 bg-codex-border rounded-full"></div> Liquidity
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- DATA MODULES ---
+
+        const MODULES = [
+          {
+            id: 'home',
+            title: 'The Indian Investor\'s Dilemma',
+            subtitle: 'Structural Roadblocks to Wealth Preservation',
+            icon: <Compass className="w-5 h-5" />,
+            content: {
+              openingContext: "The trajectory of the Indian economy is widely regarded as one of the most compelling growth stories of the 21st century. However, a profound and persistent disconnect exists between the nation's macroeconomic success and the financial outcomes of the average Indian household. While the Sensex may compound at 14% annually, the median investor often realizes returns that barely match inflation. This introductory module examines the unique structural, cultural, and behavioral challenges that impede the Indian investor from becoming a prudent allocator of capital. It is an exploration of why, despite a globally enviable savings rate, real wealth creation remains an elusive pursuit for the majority.",
+              chapters: [
+                {
+                  heading: "I. The Paradox of Thrift: High Savings, Negative Real Yields",
+                  body: (
+                    <div className="space-y-4">
+                      <p>
+                        Culturally, India is a nation of savers. The household savings rate has historically hovered between 18% and 25% of GDP. Yet, the efficiency of these savings is alarmingly low. The average Indian investor fundamentally confuses "Saving" (the act of setting money aside) with "Investing" (the act of deploying capital to generate real returns).
+                      </p>
+                      <p>
+                        A vast majority of household financial assets are parked in savings accounts, low-yield fixed deposits, or traditional insurance policies. While these instruments offer the psychological comfort of nominal safety, they fail to account for India's structurally high inflation.
+                      </p>
+                      <p>
+                        Consider the mathematics of a Fixed Deposit yielding 7% per annum. For an investor in the 30% tax bracket, the post-tax return is approximately 4.9%. If inflation is 6%, the investor is suffering a <strong>negative real return of 1.1%</strong> every year. This is not wealth preservation; it is the slow, guaranteed erosion of purchasing power.
+                      </p>
+                    </div>
+                  )
+                },
+                {
+                  heading: "II. The Cultural Fixation: The Dead Capital of Gold",
+                  body: (
+                    <div className="space-y-4">
+                      <p>
+                        The Indian psyche is deeply wedded to tangible assets, with Gold sitting at the apex of cultural hierarchy. However, structurally, physical gold is "unproductive capital." Unlike a business that produces goods, gold sits idle. Its value is derived entirely from the hope that someone else will pay more for it in the future.
+                      </p>
+                      <p>
+                        By locking a significant percentage of net worth in jewelry—which carries high "making charges" (often 10-20% of value) that are lost immediately upon purchase—the Indian household creates a massive drag on its portfolio performance.
+                      </p>
+                    </div>
+                  )
+                },
+                {
+                  heading: "III. The Real Estate Trap: Illiquidity and Concentration",
+                  body: (
+                    <div className="space-y-4">
+                      <p>
+                        If Gold is the cultural anchor, Real Estate is the aspirational one. The risks of Real Estate are structural and severe:
+                        <ul className="list-disc pl-5 space-y-2 mt-2">
+                          <li><strong>Indivisibility:</strong> You cannot sell a "bedroom" to pay for a medical emergency.</li>
+                          <li><strong>Illiquidity:</strong> Finding a buyer at a fair price can take months or years.</li>
+                          <li><strong>Concentration Risk:</strong> A typical middle-class family often has 80-90% of their net worth tied up in a single apartment.</li>
+                          <li><strong>Rental Yields:</strong> Residential rental yields in India are abysmal, typically hovering around 2-3%.</li>
+                        </ul>
+                      </p>
+                    </div>
+                  )
+                },
+                {
+                  heading: "IV. The Agency Problem: Sales Disguised as Advice",
+                  body: (
+                    <div className="space-y-4">
+                      <p>
+                        The Indian financial services industry is dominated by a "Distribution Model," not an "Advisory Model." The relationship manager at your bank or the insurance agent is not a fiduciary. They are agents remunerated via commissions.
+                      </p>
+                      <p>
+                        This creates a fundamental Principal-Agent Conflict. The agent is incentivized to recommend products that pay the highest commission to them (Endowment Plans, ULIPs), not the products that generate the highest returns for you.
+                      </p>
+                    </div>
+                  )
+                },
+                {
+                  heading: "V. The Speculative Impulse: The Gamification of Finance",
+                  body: (
+                    <div className="space-y-4">
+                      <p>
+                        With the advent of zero-brokerage platforms, a significant portion of new retail investors treat the stock market as a casino. The explosion in Futures & Options (F&O) trading volume is a testament to this. A SEBI study revealed that <strong>9 out of 10 individual traders in the F&O segment incur net losses.</strong>
+                      </p>
+                    </div>
+                  )
+                },
+                {
+                  heading: "VI. The Path Forward: From Saver to Allocator",
+                  body: (
+                    <div className="space-y-4">
+                      <p>
+                        The solution is Structural Discipline. It requires a shift in identity from being a "Saver" to a "Capital Allocator." It requires the courage to trust intangible assets (Equities/Bonds) over tangible ones and the patience to let the magic of compounding work uninterrupted.
+                      </p>
+                    </div>
+                  )
+                }
+              ],
+              behavioralDimension: "The 'Bandwagon Effect' and 'Authority Bias' are particularly potent in the Indian context. Investors often follow the herd into hot asset classes or blindly trust an elder family member or bank manager without due diligence.",
+              limitations: [
+                "Cultural pressure to conform often overrides financial logic.",
+                "The regulatory landscape is evolving; enforcement in fraud cases can be slow.",
+                "Access to fee-only SEBI Registered Investment Advisors (RIAs) remains limited."
+              ],
+              riskStatement: "The greatest risk to the Indian investor is not market volatility, but the permanent stagnation of capital due to inflation, high fees, and emotional decision-making.",
+              source: "Analysis based on SEBI Investor Reports, RBI Household Finance Committee Data, and Historical Market Trends."
+            }
+          },
+          {
+            id: 'inflation',
+            title: 'Inflation & Purchasing Power',
+            subtitle: 'The Silent Erosion of Capital',
+            icon: <Scale className="w-5 h-5" />,
+            content: {
+              openingContext: "In the architecture of modern economics, inflation is not merely a statistic; it is a structural inevitability. It represents the persistent, non-linear decline in the purchasing power of fiat currency. For the prudent investor, understanding inflation is the first step in capital preservation. It is the invisible adversary that transforms safe 'saving' into guaranteed loss.",
+              visualComponent: <InflationDiagram />,
+              visualCaption: "Figure 1. The Asymptotic Decay of Purchasing Power over a 20-Year Horizon.",
+              chapters: [
+                {
+                  heading: "I. The Mechanics of Currency Devaluation",
+                  body: (
+                    <div className="space-y-4">
+                      <p>
+                        Inflation acts as a dynamic tax on idle capital. In an economy targeting a 4-6% inflation rate, cash held in non-interest-bearing accounts effectively suffers a negative real yield. The distinction between Nominal Returns and Real Returns is the single most critical concept in long-term finance.
+                      </p>
+                    </div>
+                  )
+                },
+                {
+                  heading: "II. Lifestyle Inflation vs. CPI",
+                  body: (
+                    <div className="space-y-4">
+                      <p>
+                        A profound error investors make is relying on the Consumer Price Index (CPI) as a personal benchmark. Sectors such as healthcare, higher education, and premium real estate often inflate at rates double the official CPI. This "Personal Inflation Rate" is the true hurdle rate for your portfolio.
+                      </p>
+                    </div>
+                  )
+                },
+                {
+                  heading: "III. The Illusion of Safety in Cash",
+                  body: (
+                    <div className="space-y-4">
+                      <p>
+                        Psychologically, cash feels safe because its nominal value does not fluctuate. However, in terms of utility, cash is the only asset class guaranteed to lose value over time. Stability in cash is the price one pays for the certainty of losing purchasing power.
+                      </p>
+                    </div>
+                  )
+                }
+              ],
+              behavioralDimension: "The 'Money Illusion' cognitive bias leads individuals to view wealth in nominal terms. A salary hike of 5% feels like progress, even if inflation is 6%. This bias causes a systematic under-allocation to growth assets.",
+              limitations: [
+                "Inflation data is retrospective.",
+                "Hyper-inflationary events can render standard hedging strategies ineffective.",
+                "Hedging against inflation introduces volatility risk."
+              ],
+              riskStatement: "Attempting to outpace inflation requires exposure to assets with non-guaranteed outcomes. There is no risk-free mechanism to generate high real returns.",
+              source: "Derived from RBI Monetary Policy Reports & Standard Macroeconomic Theory."
+            }
+          },
+          {
+            id: 'compounding',
+            title: 'The Mechanics of Compounding',
+            subtitle: 'Exponential Growth and Continuity',
+            icon: <Landmark className="w-5 h-5" />,
+            content: {
+              openingContext: "Compounding is often reduced to the simple platitude of 'money making money.' However, structurally, it is the mathematical manifestation of continuity. It is an exponential function where the primary variable is not the rate of return, but the duration of the holding period.",
+              visualComponent: <CompoundingDiagram />,
+              visualCaption: "Figure 2. Linear vs. Exponential Growth Trajectories over extended timeframes.",
+              chapters: [
+                {
+                  heading: "I. The Geometry of Wealth: Time as the Dominant Variable",
+                  body: (
+                    <div className="space-y-4">
+                      <p>
+                        The fundamental equation of compounding, A = P(1 + r)^n, reveals a non-intuitive truth: wealth accumulation is exponentially sensitive to n (time). The "boring" middle years, where gains seem negligible compared to savings, are not a period of stagnation. They are the structural foundation required for the exponential explosion in later decades.
+                      </p>
+                    </div>
+                  )
+                },
+                {
+                  heading: "II. Black Swans and the 'Penalty of Absence'",
+                  body: (
+                    <div className="space-y-4">
+                      <p>
+                        Javier Estrada (2008) analyzed daily returns across 15 global markets over 40 years. His findings were stark: missing the 10 best days in the market resulted in a portfolio value 40% to 50% lower than a fully invested portfolio. To capture the exponential curve, one must endure the volatility.
+                      </p>
+                    </div>
+                  )
+                },
+                {
+                  heading: "III. The Asymmetry of Loss: Understanding Variance Drain",
+                  body: (
+                    <div className="space-y-4">
+                      <p>
+                        Compounding is structurally fragile. It is destroyed more easily by large losses than it is helped by large gains. A portfolio that generates a steady 10% return will vastly outperform a portfolio that oscillates between +40% and -30%, even if their average returns look similar.
+                      </p>
+                    </div>
+                  )
+                },
+                {
+                  heading: "IV. Market Efficiency",
+                  body: (
+                    <div className="space-y-4">
+                      <p>
+                        For the Indian investor, a boring, low-cost index strategy is not "settling for average." It is a mathematically superior strategy for compounding because it minimizes the frictional costs (fees, taxes, and manager error) that act as a drag on the exponential function.
+                      </p>
+                    </div>
+                  )
+                }
+              ],
+              behavioralDimension: "Impatience is the behavioral manifestation of our linear bias. We seek immediate feedback and consistent upward progress. Compounding offers neither in the short term.",
+              limitations: [
+                "Compounding assumes reinvestment of all dividends.",
+                "Real markets have sequence-of-returns risk.",
+                "Taxes and fees compound negatively."
+              ],
+              riskStatement: "Compounding magnifies everything. Debt compounds. Fees compound. Inflation compounds.",
+              source: "Based on research by Javier Estrada, Eugene Fama, and Nassim Nicholas Taleb."
+            }
+          },
+          {
+            id: 'asset-classes',
+            title: 'Structural Asset Classes',
+            subtitle: 'The Building Blocks of a Portfolio',
+            icon: <BookOpen className="w-5 h-5" />,
+            content: {
+              openingContext: "An asset class is a collection of securities that exhibit similar financial characteristics. For the Indian investor, shifting focus from 'Stock Selection' to 'Asset Allocation' is the most significant step toward financial maturity.",
+              visualComponent: <AssetClassTable />,
+              visualCaption: "Table 1. Structural comparison of primary asset classes available to Indian investors.",
+              chapters: [
+                {
+                    heading: "I. The Architecture of Allocation",
+                    body: "Academic studies suggest that over 90% of a portfolio's variation in returns is determined by asset allocation, not by selecting individual securities."
+                },
+                {
+                    heading: "II. Equity: The Engine of Ownership",
+                    body: "Equity is fractional ownership. Historically, equity has been the only asset class to consistently outpace inflation. Volatility is the price of admission for these superior returns."
+                },
+                {
+                    heading: "III. Fixed Income: The Anchor of Stability",
+                    body: "Fixed Income is lending. Its primary role is Stability and Income. For Indian households, over-allocation here leads to the silent risk of purchasing power erosion."
+                },
+                {
+                    heading: "IV. Gold & Real Assets: Insurance, Not Income",
+                    body: "Gold is unproductive capital; it is insurance against currency failure. Real Estate suffers from illiquidity and concentration risk."
+                },
+                {
+                    heading: "V. Cash & Liquidity: The Silent Asset",
+                    body: "Cash offers 'Optionality'—the ability to handle emergencies without disturbing long-term investments."
+                }
+              ],
+              behavioralDimension: "Home Bias and Tangibility Bias dominate asset selection. Investors overweight assets they can see (Real Estate) or assets from their home country.",
+              limitations: ["Diversification ensures you will never hold the top-performing asset.", "Correlation breakdown in crises."],
+              riskStatement: "Every asset class carries a specific risk. There is no sanctuary.",
+              source: "Modern Portfolio Theory (MPT) & AMFI Guidelines."
+            }
+          },
+          {
+            id: 'portfolio-construction',
+            title: 'Strategic Portfolio Construction',
+            subtitle: 'From Components to Architecture',
+            icon: <Layers className="w-5 h-5" />,
+            content: {
+                openingContext: "Strategic Portfolio Construction is the disciplined process of combining non-correlated assets to maximize the probability of achieving long-term goals while minimizing the risk of ruin.",
+                visualComponent: <PortfolioAllocationDiagram />,
+                visualCaption: "Figure 2. The Strategic Core-Satellite Asset Allocation Model.",
+                chapters: [
+                    {
+                        heading: "I. Determinants of Performance",
+                        body: "Brinson, Hood, and Beebower (1986) concluded that 93.6% of portfolio return variation is explained by Asset Allocation policy, not market timing."
+                    },
+                    {
+                        heading: "II. The Core-Satellite Approach",
+                        body: "A robust model: Core (70-80%) in low-cost Index Funds and Debt for market returns. Satellite (20-30%) in active bets for potential Alpha."
+                    },
+                    {
+                        heading: "III. The Magic of Rebalancing",
+                        body: "Rebalancing forces you to sell high and buy low systematically, enforcing discipline that human emotions typically prevent."
+                    }
+                ],
+                behavioralDimension: "The 'Endowment Effect' causes investors to overvalue assets they already own, making them reluctant to sell winners to rebalance.",
+                limitations: ["Asset correlations are not static.", "Rebalancing incurs transaction costs and taxes."],
+                riskStatement: "Neglecting a portfolio leads to 'Style Drift,' exposing the investor to unintended risk levels.",
+                source: "Brinson, Hood, and Beebower (1986)."
+            }
+          },
+          {
+            id: 'risk',
+            title: 'Risk & Volatility',
+            subtitle: 'Distinguishing Fluctuation from Failure',
+            icon: <ShieldAlert className="w-5 h-5" />,
+            content: {
+                openingContext: "In the lexicon of The Calm Capital, 'Risk' is distinct from 'Volatility.' Volatility is the emotional price of admission; Risk is the permanent destruction of capital.",
+                visualComponent: <RiskReturnDiagram />,
+                visualCaption: "Figure 3. The Hierarchy of Risk, Return, and Capital Preservation.",
+                chapters: [
+                    {
+                        heading: "I. Defining True Risk",
+                        body: "Institutional investors define risk as the probability of permanent capital impairment or Shortfall Risk (failing to meet liabilities), not daily price movement."
+                    },
+                    {
+                        heading: "II. Sequence of Returns Risk",
+                        body: "The order of returns matters during withdrawals. A crash early in retirement is devastating, necessitating a 'Glide Path' to stable assets."
+                    },
+                    {
+                        heading: "III. The Behavioral Gap",
+                        body: "The greatest risk is the investor's behavior—buying high and selling low—which causes Investor Returns to lag Investment Returns."
+                    }
+                ],
+                behavioralDimension: "Loss Aversion causes investors to obsess over short-term losses, leading to defensive decision-making that harms long-term results.",
+                limitations: ["Standard Deviation assumes normal distribution, ignoring 'Fat Tails'.", "Risk capacity is often confused with Risk Tolerance."],
+                riskStatement: "We manage probabilities, we do not predict futures.",
+                source: "Howard Marks' 'The Most Important Thing'."
+            }
+          }
+        ];
+
+        const GLOSSARY_TERMS = [
+          { term: "Alpha", definition: "A measure of the active return on an investment compared to a suitable market index." },
+          { term: "Asset Allocation", definition: "The implementation of an investment strategy that attempts to balance risk versus reward by adjusting the percentage of each asset class." },
+          { term: "Bear Market", definition: "A condition in which securities prices fall 20% or more from recent highs." },
+          { term: "Beta", definition: "A measure of the volatility of a security or portfolio compared to the market as a whole." },
+          { term: "Bull Market", definition: "A condition of financial markets in which prices are rising or are expected to rise." },
+          { term: "Compound Interest", definition: "Interest calculated on the initial principal, which also includes all of the accumulated interest from previous periods." },
+          { term: "Diversification", definition: "A risk management strategy that mixes a wide variety of investments within a portfolio." },
+          { term: "Fiat Currency", definition: "Government-issued currency that is not backed by a physical commodity." },
+          { term: "Fixed Income", definition: "Investments that pay investors fixed interest or dividend payments until maturity." },
+          { term: "Inflation", definition: "The rate at which the general level of prices for goods and services is rising." },
+          { term: "Liquidity", definition: "The efficiency or ease with which an asset or security can be converted into ready cash." },
+          { term: "Real Return", definition: "The annual percentage return realized on an investment, adjusted for inflation." },
+          { term: "Rebalancing", definition: "The process of realigning the weightings of a portfolio of assets." },
+          { term: "Sequence Risk", definition: "The risk that the timing of withdrawals from a retirement account will have a negative impact on the overall rate of return." },
+          { term: "Volatility", definition: "A statistical measure of the dispersion of returns. Often used as a proxy for risk." }
+        ];
+
+        // --- UI COMPONENTS ---
+
+        const SectionHeader = ({ number, title, subtitle }) => (
+          <div className="mb-12 border-b border-codex-border pb-6">
+            <div className="flex items-center gap-3 mb-3">
+              <span className="text-xs font-bold tracking-[0.2em] text-codex-gold uppercase">Section {number}</span>
+              <div className="h-px w-12 bg-codex-border"></div>
+            </div>
+            <h2 className="font-serif text-4xl md:text-5xl text-codex-text leading-tight mb-2">{title}</h2>
+            <p className="font-body text-xl text-codex-dim italic font-light">{subtitle}</p>
+          </div>
+        );
+
+        const ChapterBlock = ({ heading, children }) => (
+          <div className="mb-16">
+            <h3 className="font-sans text-lg font-bold uppercase tracking-widest text-codex-text mb-6 pl-4 border-l-2 border-codex-gold">
+              {heading}
+            </h3>
+            <div className="font-body text-lg md:text-xl text-codex-dim leading-relaxed space-y-4 text-justify">
+              {children}
+            </div>
+          </div>
+        );
+
+        const RiskBlock = ({ children }) => (
+          <div className="bg-codex-card p-6 md:p-10 rounded-sm border border-codex-border border-l-4 border-l-codex-alert my-12 relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <ShieldAlert size={64} className="text-codex-alert" />
+            </div>
+            <h4 className="font-sans text-xs font-bold uppercase tracking-widest text-codex-alert mb-4">Risk Awareness</h4>
+            <p className="font-sans text-sm md:text-base text-codex-dim leading-relaxed relative z-10">
+              {children}
+            </p>
+          </div>
+        );
+
+        const Modal = ({ onClose, children }) => (
+          <div className="fixed inset-0 z-50 bg-codex-black/95 backdrop-blur-md p-6 overflow-y-auto animate-fade-in flex items-center justify-center overlay-backdrop">
+            <div className="max-w-2xl w-full bg-codex-card border border-codex-border p-8 md:p-12 shadow-2xl relative">
+               <button onClick={onClose} className="absolute top-6 right-6 text-codex-dim hover:text-codex-gold transition-colors">
+                 <X size={24} />
+               </button>
+               {children}
+            </div>
+          </div>
+        );
+
+        const GlossaryOverlay = ({ onClose }) => {
+          const [query, setQuery] = useState('');
+          const filteredTerms = GLOSSARY_TERMS.filter(t => 
+            t.term.toLowerCase().includes(query.toLowerCase()) || 
+            t.definition.toLowerCase().includes(query.toLowerCase())
+          );
+
+          return (
+            <div className="fixed inset-0 z-50 bg-codex-black/98 backdrop-blur-sm p-6 overflow-y-auto animate-fade-in flex flex-col overlay-backdrop">
+               <div className="max-w-3xl mx-auto w-full flex-1 mt-12">
+                 <div className="flex items-center justify-between mb-8 pb-4 border-b border-codex-border">
+                   <div className="flex items-center gap-3">
+                     <Book className="w-6 h-6 text-codex-gold" />
+                     <h2 className="font-serif text-2xl text-codex-text">Financial Glossary</h2>
+                   </div>
+                   <button onClick={onClose} className="p-2 hover:bg-codex-card rounded-full transition-colors">
+                     <X size={24} className="text-codex-text" />
+                   </button>
+                 </div>
+                 <div className="mb-8 relative">
+                    <input
+                      type="text"
+                      placeholder="Filter terminology..."
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      className="w-full bg-codex-card border border-codex-border text-codex-text p-4 pl-12 font-sans text-lg focus:outline-none focus:border-codex-gold placeholder:text-codex-dim/50 shadow-inner"
+                      autoFocus
+                    />
+                    <Search className="absolute left-4 top-4 text-codex-dim w-5 h-5" />
+                 </div>
+                 <div className="grid gap-4">
+                   {filteredTerms.map((item, idx) => (
+                     <div key={idx} className="bg-codex-card p-6 border border-codex-border hover:border-codex-gold/30 transition-colors shadow-sm">
+                        <h3 className="font-serif text-lg font-bold text-codex-gold mb-2">{item.term}</h3>
+                        <p className="font-body text-codex-dim leading-relaxed">{item.definition}</p>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+            </div>
+          );
+        };
+
+        const Navigation = ({ activeId, onSelect, mobileOpen, setMobileOpen, onToggleGlossary, onToggleAbout, onTogglePrivacy, onToggleTerms }) => {
+          const [searchQuery, setSearchQuery] = useState('');
+          const filteredModules = MODULES.filter(m => {
+            if (!searchQuery) return true;
+            const q = searchQuery.toLowerCase();
+            return (
+              m.title.toLowerCase().includes(q) ||
+              m.content.openingContext.toLowerCase().includes(q) ||
+              m.content.chapters.some(c => c.heading.toLowerCase().includes(q))
+            );
+          });
+
+          return (
+            <>
+              {/* Desktop Sidebar */}
+              <nav className="hidden lg:flex flex-col w-80 h-screen fixed left-0 top-0 bg-codex-black border-r border-codex-border z-10 no-print">
+                <div className="p-8 border-b border-codex-border">
+                  <h1 className="font-serif text-3xl text-codex-text tracking-tight">The Calm<br/><span className="text-codex-gold">Capital</span></h1>
+                  <p className="text-[10px] text-codex-dim mt-4 font-sans uppercase tracking-[0.2em]">Institutional Archive</p>
+                </div>
+                <div className="flex-1 overflow-y-auto py-6 px-4 space-y-2">
+                  {MODULES.map((module) => (
+                    <button
+                      key={module.id}
+                      onClick={() => onSelect(module.id)}
+                      className={`w-full text-left px-4 py-4 rounded-sm transition-all duration-300 group flex items-center gap-3 border border-transparent ${activeId === module.id ? 'bg-codex-card border-codex-border' : 'hover:bg-codex-card/50'}`}
+                    >
+                      <span className={`transition-colors ${activeId === module.id ? 'text-codex-gold' : 'text-codex-dim'}`}>
+                        {module.icon}
+                      </span>
+                      <span className={`font-sans text-sm font-medium ${activeId === module.id ? 'text-codex-text' : 'text-codex-dim'}`}>
+                        {module.title}
+                      </span>
+                      {activeId === module.id && <ChevronRight className="ml-auto w-4 h-4 text-codex-gold" />}
+                    </button>
+                  ))}
+                </div>
+                <div className="p-8 text-[10px] text-codex-dim border-t border-codex-border bg-codex-black">
+                   <div className="flex flex-col gap-3">
+                      <button onClick={onToggleGlossary} className="flex items-center gap-3 text-codex-dim hover:text-codex-gold transition-colors font-sans font-bold tracking-widest"><Book size={14} /> GLOSSARY</button>
+                      <button onClick={onToggleAbout} className="flex items-center gap-3 text-codex-dim hover:text-codex-gold transition-colors font-sans font-bold tracking-widest"><User size={14} /> ABOUT</button>
+                      <button onClick={onToggleTerms} className="flex items-center gap-3 text-codex-dim hover:text-codex-gold transition-colors font-sans font-bold tracking-widest"><FileText size={14} /> DISCLAIMER</button>
+                      <button onClick={onTogglePrivacy} className="flex items-center gap-3 text-codex-dim hover:text-codex-gold transition-colors font-sans font-bold tracking-widest"><Lock size={14} /> PRIVACY</button>
+                   </div>
+                </div>
+              </nav>
+
+              {/* Mobile Header */}
+              <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-codex-black border-b border-codex-border z-40 flex items-center justify-between px-6 no-print">
+                 <span className="font-serif text-lg text-codex-text">The Calm Capital</span>
+                 <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 text-codex-text">
+                   {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+                 </button>
+              </div>
+
+              {/* Mobile Menu */}
+              {mobileOpen && (
+                <div className="fixed inset-0 z-30 bg-codex-black pt-20 px-6 animate-fade-in lg:hidden flex flex-col">
+                   <div className="mb-6 relative">
+                      <input
+                        type="text"
+                        placeholder="Search..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full bg-codex-card border border-codex-border rounded-none p-4 pl-12 font-sans text-codex-text text-lg focus:outline-none focus:border-codex-gold"
+                      />
+                      <Search className="absolute left-4 top-4 text-codex-dim w-5 h-5" />
+                   </div>
+                   <div className="flex flex-col gap-2 overflow-y-auto pb-20 flex-1">
+                     {filteredModules.map((module) => (
+                        <button
+                          key={module.id}
+                          onClick={() => { onSelect(module.id); setMobileOpen(false); setSearchQuery(''); }}
+                          className="text-left py-4 border-b border-codex-border group"
+                        >
+                          <div className="text-xl font-serif text-codex-text group-hover:text-codex-gold transition-colors">{module.title}</div>
+                        </button>
+                     ))}
+                     <div className="mt-8 flex flex-col gap-4">
+                       <button onClick={() => { onToggleGlossary(); setMobileOpen(false); }} className="flex items-center justify-center gap-2 py-4 border border-codex-border text-codex-dim uppercase hover:text-codex-gold">Glossary</button>
+                       <button onClick={() => { onToggleAbout(); setMobileOpen(false); }} className="flex items-center justify-center gap-2 py-4 border border-codex-border text-codex-dim uppercase hover:text-codex-gold">About</button>
+                       <button onClick={() => { onToggleTerms(); setMobileOpen(false); }} className="flex items-center justify-center gap-2 py-4 border border-codex-border text-codex-dim uppercase hover:text-codex-gold">Disclaimer</button>
+                       <button onClick={() => { onTogglePrivacy(); setMobileOpen(false); }} className="flex items-center justify-center gap-2 py-4 border border-codex-border text-codex-dim uppercase hover:text-codex-gold">Privacy</button>
+                     </div>
+                   </div>
+                </div>
+              )}
+            </>
+          );
+        };
+
+        // --- MAIN APP ---
+
+        const App = () => {
+          const [activeModuleId, setActiveModuleId] = useState('home');
+          const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+          const [showGlossary, setShowGlossary] = useState(false);
+          const [showAbout, setShowAbout] = useState(false);
+          const [showPrivacy, setShowPrivacy] = useState(false);
+          const [showTerms, setShowTerms] = useState(false);
+          
+          const activeModule = MODULES.find(m => m.id === activeModuleId) || MODULES[0];
+          const contentRef = useRef(null);
+
+          useEffect(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.title = `${activeModule.title} | The Calm Capital`;
+          }, [activeModuleId]);
+
+          return (
+            <div className="min-h-screen bg-codex-black text-codex-text selection:bg-codex-gold/30">
+              <Navigation 
+                activeId={activeModuleId} 
+                onSelect={setActiveModuleId} 
+                mobileOpen={mobileMenuOpen}
+                setMobileOpen={setMobileMenuOpen}
+                onToggleGlossary={() => setShowGlossary(true)}
+                onToggleAbout={() => setShowAbout(true)}
+                onTogglePrivacy={() => setShowPrivacy(true)}
+                onToggleTerms={() => setShowTerms(true)}
+              />
+
+              {showGlossary && <GlossaryOverlay onClose={() => setShowGlossary(false)} />}
+              
+              {showAbout && (
+                <Modal onClose={() => setShowAbout(false)}>
+                   <div className="flex items-center gap-4 mb-8">
+                     <div className="p-3 bg-codex-black border border-codex-border rounded-full"><Feather className="w-6 h-6 text-codex-gold" /></div>
+                     <h2 className="font-serif text-3xl text-codex-text">About The Calm Capital</h2>
+                   </div>
+                   <div className="font-body text-codex-dim space-y-6 leading-relaxed text-lg">
+                     <p>The Calm Capital is an institutional-grade knowledge archive designed for the patient Indian investor. It was born from a frustration with the noise, urgency, and gamification that characterizes modern financial media.</p>
+                     <p>We believe that successful investing is not about intellectual complexity, but behavioral discipline.</p>
+                   </div>
+                </Modal>
+              )}
+
+              {showPrivacy && (
+                <Modal onClose={() => setShowPrivacy(false)}>
+                   <div className="flex items-center gap-4 mb-8">
+                     <div className="p-3 bg-codex-black border border-codex-border rounded-full"><Lock className="w-6 h-6 text-codex-gold" /></div>
+                     <h2 className="font-serif text-3xl text-codex-text">Privacy Policy</h2>
+                   </div>
+                   <div className="font-body text-codex-dim space-y-6 leading-relaxed text-sm md:text-base h-[60vh] overflow-y-auto pr-2">
+                     <div className="space-y-4">
+                        <h3 className="font-sans text-xs font-bold uppercase tracking-widest text-codex-text">1. No Personal Data Collection</h3>
+                        <p>The Calm Capital operates as a static, informational website. We do not require account creation, nor do we maintain a database of user profiles, email addresses, or financial data. You interact with this platform anonymously.</p>
+                     </div>
+
+                     <div className="space-y-4">
+                        <h3 className="font-sans text-xs font-bold uppercase tracking-widest text-codex-text">2. Local Storage & Cookies</h3>
+                        <p>This website may use your browser's "Local Storage" strictly to remember your interface preferences (such as reading progress or theme settings) between visits. This data is stored entirely on your device and is never transmitted to our servers.</p>
+                     </div>
+
+                     <div className="space-y-4">
+                        <h3 className="font-sans text-xs font-bold uppercase tracking-widest text-codex-text">3. Third-Party Infrastructure</h3>
+                        <p>To deliver this content efficiently, we utilize standard third-party content delivery networks (CDNs) including GitHub Pages (hosting), Tailwind (styling), and ESM.sh (libraries). When your browser loads these resources, your IP address is visible to these infrastructure providers as part of standard internet communication protocols. We do not have access to these logs for user tracking purposes.</p>
+                     </div>
+
+                     <div className="space-y-4">
+                        <h3 className="font-sans text-xs font-bold uppercase tracking-widest text-codex-text">4. External Links</h3>
+                        <p>This platform may contain links to external regulatory bodies (SEBI, RBI) or financial resources. We are not responsible for the privacy practices or content of these external sites.</p>
+                     </div>
+                   </div>
+                </Modal>
+              )}
+
+              {showTerms && (
+                <Modal onClose={() => setShowTerms(false)}>
+                   <div className="flex items-center gap-4 mb-8">
+                     <div className="p-3 bg-codex-black border border-codex-border rounded-full"><FileText className="w-6 h-6 text-codex-gold" /></div>
+                     <h2 className="font-serif text-3xl text-codex-text">Terms & Disclaimer</h2>
+                   </div>
+                   <div className="font-body text-codex-dim space-y-6 leading-relaxed text-sm md:text-base h-[60vh] overflow-y-auto pr-2">
+                     <div className="space-y-4">
+                        <h3 className="font-sans text-xs font-bold uppercase tracking-widest text-codex-text">1. Educational Purpose Only</h3>
+                        <p>The content provided on The Calm Capital ("The Platform") is strictly for educational and informational purposes. It is designed to explain financial concepts, historical market behavior, and structural risks. It does not constitute, and should not be interpreted as, financial, investment, tax, or legal advice.</p>
+                     </div>
+
+                     <div className="space-y-4">
+                        <h3 className="font-sans text-xs font-bold uppercase tracking-widest text-codex-text">2. No Recommendation or Solicitation</h3>
+                        <p>Nothing on this Platform constitutes a recommendation, solicitation, or offer to buy or sell any financial instrument, security, or investment product. The Platform does not recommend specific mutual funds, stocks, or insurance schemes.</p>
+                     </div>
+
+                     <div className="space-y-4">
+                        <h3 className="font-sans text-xs font-bold uppercase tracking-widest text-codex-text">3. Assumption of Risk</h3>
+                        <p>Investing in financial markets involves inherent risks, including the potential loss of principal. Past performance of asset classes or indices is not indicative of future results. The user assumes full responsibility for any financial decisions made.</p>
+                     </div>
+
+                     <div className="space-y-4">
+                        <h3 className="font-sans text-xs font-bold uppercase tracking-widest text-codex-text">4. Accuracy of Information</h3>
+                        <p>While every effort is made to ensure the accuracy of the information presented, The Platform makes no warranties, expressed or implied, regarding the completeness, accuracy, or timeliness of the content. Regulatory frameworks (SEBI, RBI) and tax laws are subject to change.</p>
+                     </div>
+                     
+                     <div className="space-y-4">
+                        <h3 className="font-sans text-xs font-bold uppercase tracking-widest text-codex-text">5. Professional Advice</h3>
+                        <p>Users are strongly encouraged to consult with a SEBI-Registered Investment Advisor (RIA), Chartered Accountant, or qualified financial professional before making any investment decisions suited to their specific financial situation and risk tolerance.</p>
+                     </div>
+                   </div>
+                </Modal>
+              )}
+
+              <main className="lg:pl-80 pt-16 lg:pt-0 w-full transition-all duration-500">
+                <div className="max-w-5xl mx-auto px-6 py-12 md:py-24" ref={contentRef}>
+                  
+                  <div className="mb-20 flex items-start justify-between opacity-50 no-print">
+                     <div className="text-[10px] uppercase tracking-[0.3em] font-sans border border-codex-dim px-3 py-1 text-codex-dim">The Calm Capital Project</div>
+                     <div className="text-[10px] uppercase tracking-[0.3em] font-sans text-right text-codex-dim">Ref: {activeModule.id.toUpperCase()}-v3</div>
+                  </div>
+
+                  <article className="animate-fade-in-up">
+                    <SectionHeader 
+                      number={String(MODULES.findIndex(m => m.id === activeModule.id)).padStart(2, '0')} 
+                      title={activeModule.title} 
+                      subtitle={activeModule.subtitle}
+                    />
+
+                    <div className="font-serif text-2xl md:text-3xl text-codex-text leading-relaxed mb-16 italic opacity-90">
+                      {activeModule.content.openingContext}
+                    </div>
+
+                    {activeModule.content.visualComponent && (
+                      <figure className="my-16">
+                         <div className="p-1 border border-codex-border bg-codex-card">{activeModule.content.visualComponent}</div>
+                         {activeModule.content.visualCaption && <figcaption className="text-xs text-center text-codex-dim mt-4 font-sans uppercase tracking-wider">{activeModule.content.visualCaption}</figcaption>}
+                      </figure>
+                    )}
+
+                    <div className="my-20">
+                       {activeModule.content.chapters.map((chapter, idx) => (
+                         <ChapterBlock key={idx} heading={chapter.heading}>{chapter.body}</ChapterBlock>
+                       ))}
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-12 mb-16 pt-12 border-t border-codex-border">
+                       <div>
+                          <h4 className="font-sans text-xs font-bold uppercase tracking-widest text-codex-gold mb-4">Behavioral Dimension</h4>
+                          <p className="font-body text-lg text-codex-dim leading-relaxed">{activeModule.content.behavioralDimension}</p>
+                       </div>
+                       <div>
+                          <h4 className="font-sans text-xs font-bold uppercase tracking-widest text-codex-gold mb-4">Structural Limitations</h4>
+                          <ul className="list-disc pl-5 space-y-3 marker:text-codex-gold text-codex-dim font-body text-lg">
+                            {activeModule.content.limitations.map((limit, idx) => <li key={idx} className="pl-2">{limit}</li>)}
+                          </ul>
+                       </div>
+                    </div>
+
+                    <RiskBlock>{activeModule.content.riskStatement}</RiskBlock>
+
+                    <div className="mt-24 pt-8 border-t border-codex-border flex flex-col md:flex-row justify-between gap-4 text-xs font-sans text-codex-dim opacity-60">
+                      <div><span className="font-bold uppercase tracking-wider block mb-1 text-codex-goldDim">Source Disclosure</span>{activeModule.content.source}</div>
+                    </div>
+                  </article>
+
+                  <footer className="mt-32 text-center pb-20 no-print">
+                    <div className="w-12 h-px bg-codex-gold mx-auto mb-8"></div>
+                    <p className="font-serif italic text-codex-dim text-lg mb-8">"The preservation of capital requires the understanding of risk, not just the pursuit of return."</p>
+                    <div className="flex justify-center gap-6 text-xs font-sans uppercase tracking-widest text-codex-dim">
+                        <button onClick={() => setShowTerms(true)} className="hover:text-codex-gold">Disclaimer</button>
+                    </div>
+                  </footer>
+                </div>
+              </main>
+            </div>
+          );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
