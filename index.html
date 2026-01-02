@@ -266,34 +266,56 @@
   },
   {
     id: 'risk',
-    title: 'Risk & Volatility',
-    subtitle: 'Distinguishing Fluctuation from Failure',
+    title: 'Risk & Volatility Architecture',
+    subtitle: 'The Price of Admission vs. The Cost of Destruction',
     icon: 'ShieldAlert',
-    readTime: "14 min read",
+    readTime: "30 min read",
     content: {
-      openingContext: "In the lexicon of The Calm Capital, 'Risk' is distinct from 'Volatility.' The financial media uses these terms interchangeably, but they are fundamentally different. Volatility is the emotional price of admission; Risk is the permanent destruction of capital. Understanding this nuance allows the investor to remain calm when the screen is red.",
+      openingContext: "In the architecture of The Calm Capital, we make a profound distinction between two concepts often treated as synonyms: **Volatility** and **Risk**. The financial media and most retail investors conflate the two, leading to suboptimal decision-making. Volatility is the temporary fluctuation of price—the 'fee' you pay for admission to the market. Risk, however, is the permanent destruction of capital or the failure to meet life goals. Understanding this hierarchy is the single most important intellectual leap for an institutional-grade allocator.",
       visualType: 'risk',
       chapters: [
          { 
-             heading: "I. Defining True Risk", 
-             body: `Institutional investors define risk as the probability of permanent capital impairment or **Shortfall Risk** (failing to meet liabilities), not daily price movement. If your portfolio drops 20% but you don't sell, you have experienced volatility, not loss. If you panic and sell, you have converted volatility into a permanent loss.
+             heading: "I. The Ontology of Risk: Volatility is the Fee", 
+             body: `Imagine you own an apartment worth ₹1 Crore. If a neighbor sells a similar apartment for ₹80 Lakhs due to distress, the "quoted price" of your asset has dropped by 20%. However, you do not feel a loss because you are not selling. You understand the intrinsic value remains.
+
+             The stock market is simply a real estate market where the prices are quoted every second. Volatility is the emotional tax levied on investors for the liquidity the market provides. If you can withstand the emotional tax (not selling during a drawdown), volatility is harmless. It becomes "Risk" only when you convert a temporary fluctuation into a permanent realized loss by selling in panic.
              
-             True risk involves:
-             1. **Permanent Loss:** Buying a fraudulent company that goes to zero.
-             2. **Inflation Risk:** Being too safe and losing purchasing power.
-             3. **Behavioral Risk:** Selling at the bottom due to panic.` 
+             **Key Insight:** Volatility is a feature, not a bug. It is the mechanism that allows patient capital to acquire assets from impatient capital at a discount.` 
          },
          { 
-             heading: "II. Sequence of Returns Risk", 
-             body: `The order in which returns happen matters, especially during the withdrawal phase (Retirement). A market crash early in retirement can deplete the corpus too quickly, leading to money running out. This necessitates a 'Glide Path'—gradually shifting from Equity to Debt as the goal approaches. You cannot hold 100% equity when you need the money next year.` 
+             heading: "II. The Silent Killer: Inflationary Risk", 
+             body: `The most dangerous risks are the ones that are invisible. The risk of holding "safe" assets like Cash or Low-Yield Fixed Deposits is **Inflationary Risk**. This is the certainty of purchasing power destruction.
+
+             In India, where real inflation often exceeds official CPI figures, a portfolio that avoids volatility (by holding 100% Fixed Deposits) is essentially guaranteeing a long-term loss of wealth. You are trading the *uncertainty* of gain (Equity) for the *certainty* of loss (Inflation). For a 20-year horizon, cash is riskier than stocks.` 
+         },
+         { 
+             heading: "III. Sequence of Returns Risk: The Retirement Assassin", 
+             body: `When you are accumulating wealth (SIP phase), a market crash is a blessing—it allows you to buy more units cheap. However, when you are withdrawing wealth (Retirement), a market crash is catastrophic.
+
+             **The Math of Ruin:** If the market falls 40% in the first two years of your retirement, and you are withdrawing 5% annually for expenses, you are depleting your corpus at an accelerated rate. You are forced to sell more units to generate the same cash flow. Even if the market recovers later, your portfolio may never recover because you sold the seed corn.
+             
+             This specific risk necessitates a **Glide Path Strategy**—reducing equity exposure 3-5 years *before* retirement to insulate the portfolio from this "timing luck".` 
          },
          {
-             heading: "III. The Behavioral Gap",
-             body: `Carl Richards coined the term 'Behavior Gap' to describe the difference between Investment Returns (what the market gives) and Investor Returns (what the person actually gets). The gap is caused by buying high (greed) and selling low (fear). The greatest risk to your wealth is not the market; it is the person in the mirror.`
+             heading: "IV. Behavioral Alpha: The Enemy in the Mirror",
+             body: `Financial models assume investors are rational. History proves they are emotional. **Behavioral Risk** is the probability that you will abandon your strategy at the worst possible moment.
+
+             The "Behavior Gap" is the documented underperformance of the average investor compared to the very funds they own. For example, if a Mutual Fund returns 12% annually, the average investor in that fund might only earn 8%. Why? Because they bought when the fund was "hot" (high price) and stopped their SIPs when the fund underperformed (low price).
+             
+             Institutional investing is 10% spreadsheet work and 90% emotional discipline. The ability to do nothing when the world is screaming "sell" is the ultimate edge.`
+         },
+         {
+             heading: "V. Tail Risk: The Black Swan",
+             body: `Standard financial models (Gaussian Bell Curves) severely underestimate the frequency of extreme events. We live in a "Fat Tailed" world. Events like the 2008 Crisis, Covid-19, or Demonetization happen far more frequently than models predict.
+
+             You cannot predict a Black Swan, but you can prepare for it. This is done via:
+             1. **Diversification:** Holding uncorrelated assets (Gold, International Equity).
+             2. **Liquidity:** Holding 12-24 months of expenses in cash to ensure you never become a forced seller during a crisis.
+             3. **Quality:** Owning companies with zero debt and high cash flows that can survive an economic winter.`
          }
       ],
-      behavioralDimension: "Loss Aversion causes investors to feel the pain of a loss twice as intensely as the pleasure of an equivalent gain. This leads to defensive decision-making that harms long-term results.",
-      limitations: ["Standard Deviation (Volatility) assumes normal distribution, ignoring 'Fat Tails' (Black Swans).", "Risk capacity (financial ability to take loss) is often confused with Risk Tolerance (emotional ability to take loss)."],
+      behavioralDimension: "The 'Recency Bias' makes us extrapolate the immediate past into the infinite future. If the market has been up, we think it will stay up. If it is down, we think it will go to zero.",
+      limitations: ["Risk tolerance questionnaires are flawed; they measure how you *think* you will feel, not how you *will* feel.", "Black Swans, by definition, cannot be modeled."],
       riskStatement: "We manage probabilities, we do not predict futures. The future is unknown and unknowable.",
       source: "Howard Marks' 'The Most Important Thing' & Nassim Taleb's 'Incerto'."
     }
@@ -424,10 +446,10 @@
     <script type="text/babel" data-type="module">
         import React, { useState, useEffect } from 'react';
         import { createRoot } from 'react-dom/client';
-        import { motion, useScroll, useSpring } from 'framer-motion';
+        import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
         import { 
           BookOpen, ShieldAlert, Scale, Landmark, ChevronRight, Menu, X, 
-          Search, Book, User, Feather, FileText, Lock, Layers, Compass, Gavel, Clock, ArrowUp
+          Search, Book, User, Feather, FileText, Lock, Layers, Compass, Gavel, Clock, ArrowUp, Zap, BarChart, Activity
         } from 'lucide-react';
 
         // Retrieve content from global window object
@@ -556,32 +578,84 @@
           );
         }
 
-        const RiskReturnDiagram = () => {
-          const levels = [
-            { label: "Equities (Nifty 50)", risk: "High", desc: "Growth Potential / High Volatility" },
-            { label: "Corporate Debt", risk: "Medium", desc: "Yield / Credit Risk" },
-            { label: "Sovereign Bonds", risk: "Low", desc: "Safety / Inflation Risk" },
-            { label: "Liquid Cash", risk: "Lowest", desc: "Liquidity / Purchasing Power Loss" },
-          ];
-          return (
-            <div className="py-8 bg-codex-card mb-8">
-                <div className="flex flex-col items-center gap-2">
-                    {levels.map((lvl, i) => (
-                        <div 
-                            key={i}
-                            className="flex items-center justify-between px-6 py-4 border border-codex-border bg-codex-black w-full max-w-2xl transition-all hover:border-codex-gold/50"
-                            style={{ width: `${100 - (i * 10)}%` }}
+        const InteractiveRiskMatrix = () => {
+            const [selectedId, setSelectedId] = useState(null);
+            const risks = [
+                { 
+                    id: 1, 
+                    title: "Market Volatility", 
+                    subtitle: "Temporary Price Fluctuation", 
+                    icon: <Activity size={24} className="text-codex-gold"/>,
+                    content: "Volatility is often mistaken for risk. It is simply the emotional fee you pay for higher returns. In the short term, prices oscillate wildly based on sentiment. However, historically, volatility smooths out over time. It is not 'Risk' unless you panic and sell during a downturn." 
+                },
+                { 
+                    id: 2, 
+                    title: "Inflation Risk", 
+                    subtitle: "Purchasing Power Erosion", 
+                    icon: <ArrowUp size={24} className="text-codex-alert"/>,
+                    content: "The silent killer of wealth. While cash feels safe because the nominal number doesn't change, its purchasing power drops every year. Over 20 years, 6% inflation halves your money's real value. This is the risk of 'playing it safe'—the certainty of slow loss." 
+                },
+                { 
+                    id: 3, 
+                    title: "Behavioral Risk", 
+                    subtitle: "The Investor Gap", 
+                    icon: <User size={24} className="text-codex-dim"/>,
+                    content: "The greatest risk is you. The 'Behavior Gap' refers to the difference between fund returns and investor returns, caused by panic selling at bottoms and euphoric buying at tops. Managing your own psychology is significantly harder than managing a portfolio spreadsheet." 
+                },
+                { 
+                    id: 4, 
+                    title: "Sequence Risk", 
+                    subtitle: "Timing of Withdrawal", 
+                    icon: <Clock size={24} className="text-codex-goldDim"/>,
+                    content: "The risk that markets crash right when you retire. Even if long-term averages are good, a 40% drop in year 1 of retirement can deplete your capital too fast. This requires a 'Glide Path' strategy—shifting to debt 3-5 years before the goal." 
+                }
+            ];
+
+            return (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                    {risks.map(risk => (
+                        <motion.div 
+                            key={risk.id}
+                            layout
+                            onClick={() => setSelectedId(selectedId === risk.id ? null : risk.id)}
+                            className={`p-8 border border-codex-border rounded-sm cursor-pointer transition-colors relative overflow-hidden group ${selectedId === risk.id ? 'bg-codex-card border-codex-gold ring-1 ring-codex-gold/20' : 'hover:bg-codex-card/50'}`}
                         >
-                            <span className="font-serif text-codex-text text-lg">{lvl.label}</span>
-                            <div className="text-right">
-                                <span className="block text-[10px] uppercase font-bold text-codex-gold tracking-wider">{lvl.risk} Volatility</span>
-                                <span className="block text-[10px] text-codex-dim italic">{lvl.desc}</span>
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="flex items-center gap-4">
+                                    <div className={`p-2 rounded-full bg-codex-black border border-codex-border group-hover:border-codex-gold transition-colors`}>
+                                        {risk.icon}
+                                    </div>
+                                    <div>
+                                        <h5 className="font-serif text-xl text-codex-text">{risk.title}</h5>
+                                        <p className="text-[10px] uppercase tracking-widest text-codex-dim mt-1">{risk.subtitle}</p>
+                                    </div>
+                                </div>
+                                <motion.div animate={{ rotate: selectedId === risk.id ? 90 : 0 }}>
+                                    <ChevronRight className="text-codex-dim group-hover:text-codex-gold transition-colors" />
+                                </motion.div>
                             </div>
-                        </div>
+                            
+                            <AnimatePresence>
+                                {selectedId === risk.id && (
+                                    <motion.div 
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        className="text-base font-body text-codex-dim leading-relaxed border-t border-codex-border/50 pt-4 mt-4"
+                                    >
+                                        {risk.content}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </motion.div>
                     ))}
+                    <div className="col-span-1 md:col-span-2 text-center mt-2">
+                         <span className="text-[10px] uppercase tracking-widest text-codex-dim opacity-50 flex items-center justify-center gap-2">
+                            <Zap size={12}/> Click blocks to expand details
+                         </span>
+                    </div>
                 </div>
-            </div>
-          );
+            )
         };
 
         const VisualComponent = ({ type }) => {
@@ -589,7 +663,7 @@
                 case 'inflation': return <InflationDiagram />;
                 case 'assetClass': return <AssetClassTable />;
                 case 'compounding': return <CompoundingDiagram />;
-                case 'risk': return <RiskReturnDiagram />;
+                case 'risk': return <InteractiveRiskMatrix />;
                 default: return null;
             }
         };
