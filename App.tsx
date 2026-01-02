@@ -1,0 +1,1 @@
+// This file is deprecated. Logic moved to index.html for static deployment.
