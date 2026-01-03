@@ -751,7 +751,7 @@
             };
 
             return (
-                <div className="border border-codex-gold/20 bg-codex-card mb-4 rounded-sm overflow-hidden transition-all duration-300 hover:border-codex-gold/50">
+                <div className="border border-codex-gold/30 bg-codex-card mb-4 rounded-sm overflow-hidden transition-all duration-300 hover:border-codex-gold/60">
                     <button 
                         onClick={() => setIsOpen(!isOpen)} 
                         className="w-full flex items-center justify-between p-6 md:p-8 text-left focus:outline-none group hover:bg-codex-gold/5 transition-colors"
@@ -794,7 +794,7 @@
 
         const GrowthVsRealityDiagram = () => {
           return (
-            <div className="w-full p-8 bg-codex-card border border-codex-gold rounded-sm mb-12 relative overflow-hidden group">
+            <div className="w-full p-8 bg-codex-card border border-codex-gold/40 rounded-sm mb-12 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-4 opacity-10 transition-opacity group-hover:opacity-20">
                     <Activity size={120} className="text-codex-gold" />
                 </div>
@@ -882,7 +882,7 @@
             value: 100 / Math.pow(1 + inflationRate, y)
           }));
           return (
-            <div className="w-full p-8 bg-codex-card border-none rounded-sm mb-8">
+            <div className="w-full p-8 bg-codex-card border border-codex-gold/30 rounded-sm mb-8">
               <div className="flex items-end justify-between h-64 px-4 relative">
                 <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-10">
                      <div className="w-full h-px bg-white border-t border-dashed"></div>
@@ -918,7 +918,7 @@
 
         const AssetClassTable = () => {
             return (
-                <div className="overflow-x-auto border border-codex-gold rounded-sm mb-8">
+                <div className="overflow-x-auto border border-codex-gold/40 rounded-sm mb-8">
                     <table className="w-full text-left text-sm font-sans">
                         <thead className="bg-codex-black text-codex-dim text-[10px] uppercase tracking-wider font-bold border-b border-codex-gold">
                             <tr>
@@ -955,7 +955,7 @@
 
         const CompoundingDiagram = () => {
              return (
-            <div className="w-full p-12 bg-codex-card border-none rounded-sm flex flex-col md:flex-row gap-12 items-center justify-center mb-8">
+            <div className="w-full p-12 bg-codex-card border border-codex-gold/30 rounded-sm flex flex-col md:flex-row gap-12 items-center justify-center mb-8">
                 <div className="flex flex-col items-center">
                     <div className="w-40 h-40 relative flex items-center justify-center">
                          <div className="absolute w-20 h-20 rounded-full border border-codex-dim opacity-30"></div>
@@ -1036,7 +1036,7 @@
                             key={risk.id}
                             layout
                             onClick={() => setSelectedId(selectedId === risk.id ? null : risk.id)}
-                            className={`w-full text-left p-8 border border-codex-gold rounded-sm cursor-pointer transition-all duration-300 relative overflow-hidden group ${selectedId === risk.id ? 'bg-codex-card border-codex-gold ring-1 ring-codex-gold/20' : 'hover:bg-codex-card/50'}`}
+                            className={`w-full text-left p-8 border border-codex-gold/40 rounded-sm cursor-pointer transition-all duration-300 relative overflow-hidden group ${selectedId === risk.id ? 'bg-codex-card border-codex-gold ring-1 ring-codex-gold/20' : 'hover:bg-codex-card/50'}`}
                             aria-expanded={selectedId === risk.id}
                             aria-label={`Expand details for ${risk.title}`}
                             style={{ willChange: 'transform, height' }}
@@ -1152,7 +1152,7 @@
                             key={asset.id}
                             layout
                             onClick={() => setSelectedId(selectedId === asset.id ? null : asset.id)}
-                            className={`w-full text-left p-6 border border-codex-gold rounded-sm cursor-pointer transition-all duration-300 relative overflow-hidden group flex flex-col ${selectedId === asset.id ? 'bg-codex-card border-codex-gold ring-1 ring-codex-gold/20' : 'hover:bg-codex-card/50'}`}
+                            className={`w-full text-left p-6 border border-codex-gold/40 rounded-sm cursor-pointer transition-all duration-300 relative overflow-hidden group flex flex-col ${selectedId === asset.id ? 'bg-codex-card border-codex-gold ring-1 ring-codex-gold/20' : 'hover:bg-codex-card/50'}`}
                             aria-expanded={selectedId === asset.id}
                             style={{ willChange: 'transform, height' }}
                         >
@@ -1394,7 +1394,7 @@
                        ))}
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-12 mb-16 pt-12 border-t border-codex-gold/30 bg-codex-card/30 p-8 rounded-sm">
+                    <div className="grid md:grid-cols-2 gap-12 mb-16 pt-12 border border-codex-gold/30 bg-codex-card/30 p-8 rounded-sm">
                        <div>
                           <h4 className="font-sans text-xs font-bold uppercase tracking-widest text-codex-gold mb-4 flex items-center gap-2"><User size={14}/> Behavioral Dimension</h4>
                           <p className="font-body text-base text-codex-text leading-relaxed">{activeModule.content.behavioralDimension}</p>
@@ -1407,7 +1407,7 @@
                        </div>
                     </div>
 
-                    <div className="bg-codex-card p-6 md:p-10 rounded-sm border border-codex-gold border-l-4 border-l-codex-alert my-12 relative overflow-hidden shadow-2xl">
+                    <div className="bg-codex-card p-6 md:p-10 rounded-sm border border-codex-gold/50 border-l-4 border-l-codex-alert my-12 relative overflow-hidden shadow-2xl">
                         <div className="absolute top-0 right-0 p-4 opacity-5">
                           <ShieldAlert size={120} className="text-codex-alert" />
                         </div>
